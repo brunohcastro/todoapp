@@ -11,7 +11,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.faces.webapp.FacesServlet;
 import javax.servlet.ServletContext;
-import javax.servlet.ServletContextListener;
 
 @SpringBootApplication
 public class ToDoApplication implements WebMvcConfigurer, ServletContextAware {
