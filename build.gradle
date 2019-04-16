@@ -20,6 +20,8 @@ dependencies {
 	implementation 'org.apache.tomcat.embed:tomcat-embed-jasper'
 
 	implementation 'org.glassfish:javax.faces:2.3.9'
+	implementation 'javax.enterprise:cdi-api:1.2'
+
 	implementation 'org.primefaces:primefaces:6.2'
 
 	implementation 'org.webjars:bootstrap:4.3.1'
