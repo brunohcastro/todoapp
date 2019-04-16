@@ -38,14 +38,8 @@ body {
     -webkit-box-pack: center;
     justify-content: center;
     color: #fff;
-    text-shadow: 0 .05rem .1rem rgba(0, 0, 0, .5);
     box-shadow: inset 0 0 5rem rgba(0, 0, 0, .5);
 }
-
-.cover-container {
-    max-width: 42em;
-}
-
 
 /*
  * Header
@@ -84,21 +78,142 @@ body {
     .masthead-brand {
         float: left;
     }
+
     .nav-masthead {
         float: right;
     }
 }
 
+ul {
+    width: 100%;
+    padding: 0 !important;
+    margin: 0;
+}
+
+#todoForm {
+    width: 520px;
+}
+
+.ui-datalist {
+    text-align: left;
+}
+
+.ui-datalist-item {
+    text-shadow: none;
+}
+
+.todo-input {
+    border: none;
+    border-radius: 0;
+    outline: none;
+    padding: 15px 15px 15px 60px;
+    font-size: 21px;
+    width: 100%;
+    background: #ededed;
+}
+
+.todo-item .todo-status:checked + .todo-content {
+    color: rgba(0,0,0,0.2);
+    text-decoration: line-through;
+}
+
+.todo-input:focus {
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+}
+
+.todo-add {
+    border: none !important;
+    border-radius: 0;
+    margin: 0;
+    padding: 0;
+    font-size: 21px;
+    line-height: 40px;
+    width: 60px
+}
+
+.todo-item {
+    position: relative;
+    display: flex;
+    font-size: 21px;
+    color: rgba(0, 0, 0, 0.8);
+    border-bottom: 1px #eee solid;
+}
+
+.ui-datalist-item:last-child .todo-item {
+    border-bottom: none;
+}
+
+.ui-datalist-item:first-child .todo-item {
+    border-top: 2px #ddd double;
+}
+
+.todo-item .todo-status {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    margin: auto 0;
+    border: none;
+    height: 40px;
+    width: 40px;
+    opacity: 50%;
+    outline: none;
+}
+
+.ui-datalist-empty-message {
+    display: none;
+    padding: 0;
+    margin: 0;
+}
+
+.ui-datalist-content {
+    border: none;
+}
+
+.todo-item .todo-content {
+    width: 520px;
+    word-break: break-word;
+    padding: 15px 75px 15px 60px;
+    line-height: 40px;
+    margin: 0;
+    transition: .2s;
+}
+
+.todo-item .remove {
+    border: none !important;
+    border-radius: 0;
+    margin: 0;
+    padding: 0;
+    font-size: 21px;
+    line-height: 40px;
+    background-color: #c82333 !important;
+    width: 60px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    display: none;
+}
+
+li:hover .remove {
+    display: block;
+}
+
+.input-group {
+    flex-wrap: nowrap;
+}
+
+main {
+    margin-top: 60px;
+}
 
 /*
  * Cover
  */
 .cover {
     padding: 0 1.5rem;
-}
-.cover .btn-lg {
-    padding: .75rem 1.25rem;
-    font-weight: 700;
+    width: 100%;
 }
 
 

@@ -35,7 +35,7 @@ public class Todo implements Serializable {
         this.description = description;
     }
 
-    public Boolean isCompleted() {
+    public Boolean getCompleted() {
         return isCompleted;
     }
 

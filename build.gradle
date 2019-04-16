@@ -16,15 +16,14 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	// optional 'org.springframework.boot:spring-boot-devtools'
+	implementation 'org.springframework.boot:spring-boot-devtools'
 	implementation 'org.apache.tomcat.embed:tomcat-embed-jasper'
 
 	implementation 'org.glassfish:javax.faces:2.3.9'
 	implementation 'org.primefaces:primefaces:6.2'
-	implementation 'org.primefaces.themes:all-themes:1.0.10'
 
 	implementation 'org.webjars:bootstrap:4.3.1'
-	implementation 'org.webjars:font-awesome:5.8.1'
+	implementation 'org.webjars:font-awesome:4.7.0'
 
 	runtime 'org.hsqldb:hsqldb:2.3.2'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'

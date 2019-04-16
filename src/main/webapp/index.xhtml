@@ -16,6 +16,9 @@
     <!-- Bootstrap Core CSS -->
     <h:outputStylesheet library="webjars" name="bootstrap/4.3.1/css/bootstrap.min.css"/>
 
+    <!-- FontAwesome -->
+    <h:outputStylesheet library="webjars" name="font-awesome/5.8.1/css/all.min.css"/>
+
     <!-- Custom CSS -->
     <link href="#{facesContext.externalContext.requestContextPath}/resources/css/main.css" rel="stylesheet"/>
 
@@ -30,18 +33,55 @@
 <h:body class="text-center">
 
     <div class="cover-container d-flex h-100 p-3 mx-auto flex-column">
-        <header class="masthead mb-auto">
-            <div class="inner">
-                <h3 class="masthead-brand">TODO App</h3>
-                <nav class="nav nav-masthead justify-content-center">
-                    <a class="nav-link active" href="#">Home</a>
-                    <a class="nav-link" href="#">Features</a>
-                    <a class="nav-link" href="#">Contact</a>
-                </nav>
-            </div>
-        </header>
-        <main role="main" class="inner cover">
-            <p class="lead">Cover is a one-page template for building simple and beautiful home pages. Download, edit the text, and add your own fullscreen background photo to make it your own.</p>
+        <main class="inner cover">
+            <h:form id="todoForm">
+                <div class="input-group mb3">
+                    <p:inputText
+                            id="content"
+                            value="#{todoController.todo.description}"
+                            styleClass="todo-input"
+                            placeholder="Qual a próxima tarefa?"
+                    />
+
+                    <div class="input-group-append">
+                        <p:commandButton
+                                styleClass="todo-add"
+                                update="@form :todoList"
+                                action="#{todoController.createTodo}"
+                                icon="ui-icon-check"
+                        />
+                    </div>
+                </div>
+            </h:form>
+
+            <p:dataList
+                    id="todoList"
+                    var="todo"
+                    value="#{todoController.todos}"
+                    type="unordered"
+                    itemType="none"
+                    emptyMessage=""
+            >
+                <div class="todo-item">
+                    <div class="input-group">
+                        <i class="fa fa-check" />
+                        <h:selectBooleanCheckbox
+                                styleClass="todo-status"
+                                value="#{todo.completed}"
+                                id="complete"
+                        />
+                        <h:outputLabel class="todo-content" for="complete">#{todo.description}</h:outputLabel>
+                        <div class="input-group-append">
+                            <p:commandButton
+                                    styleClass="remove"
+                                    update=":todoList"
+                                    action="#{todoController.removeTodo(todo)}"
+                                    icon="ui-icon-trash"
+                            />
+                        </div>
+                    </div>
+                </div>
+            </p:dataList>
         </main>
 
         <footer class="mastfoot mt-auto">
