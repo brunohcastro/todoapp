@@ -21,6 +21,10 @@ public class TodoController implements Serializable {
 
     private final TodoService todoService;
 
+    private Todo selected;
+
+    private Boolean editing;
+
     @Autowired
     public TodoController(TodoService todoService) {
         this.todoService = todoService;
@@ -28,6 +32,7 @@ public class TodoController implements Serializable {
 
     @PostConstruct
     public void init() {
+        this.editing = false;
         loadTodos();
     }
 
@@ -40,11 +45,30 @@ public class TodoController implements Serializable {
         todos = this.todoService.find();
     }
 
-    public void createTodo() {
+    public void editTodo(Todo todo) {
+        this.selected = todo;
+    }
+
+    public void cancelEdit() {
+        this.selected = null;
+    }
+
+    public void saveTodo(Todo todo) {
         todoService.save(todo);
-        todo = new Todo();
+        this.selected = null;
 
         loadTodos();
+    }
+
+    public void createTodo() {
+        todoService.save(todo);
+        this.todo = new Todo();
+
+        loadTodos();
+    }
+
+    public Boolean isEditing(Todo todo) {
+        return this.selected != null && this.selected.equals(todo);
     }
 
     public List<Todo> getTodos() {
@@ -53,5 +77,21 @@ public class TodoController implements Serializable {
 
     public Todo getTodo() {
         return todo;
+    }
+
+    public Boolean getEditing() {
+        return editing;
+    }
+
+    public void setEditing(Boolean editing) {
+        this.editing = editing;
+    }
+
+    public Todo getSelected() {
+        return selected;
+    }
+
+    public void setSelected(Todo selected) {
+        this.selected = selected;
     }
 }

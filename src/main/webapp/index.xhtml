@@ -34,13 +34,14 @@
 
     <div class="cover-container d-flex h-100 p-3 mx-auto flex-column">
         <main class="inner cover">
-            <h:form id="todoForm">
+            <h:form id="todoForm" autocomplete="off">
                 <div class="input-group mb3">
                     <p:inputText
                             id="content"
                             value="#{todoController.todo.description}"
                             styleClass="todo-input"
                             placeholder="Qual a próxima tarefa?"
+                            autocomplete="off"
                     />
 
                     <div class="input-group-append">
@@ -62,15 +63,65 @@
                     itemType="none"
                     emptyMessage=""
             >
-                <div class="todo-item">
-                    <div class="input-group">
-                        <i class="fa fa-check" />
+                <h:panelGroup layout="block" id="todoItem" class="todo-item">
+                    <h:form layout="block" class="input-group" rendered="#{todoController.isEditing(todo)}">
+                        <p:defaultCommand target="save"/>
+                        <div class="input-group-prepend">
+                            <p:commandButton
+                                    styleClass="edit-cancel"
+                                    update=":todoList:todoItem"
+                                    action="#{todoController.cancelEdit}"
+                                    icon="ui-icon-close"
+                                    id="edit-cancel"
+                            />
+                        </div>
+                        <p:inputText
+                                id="editing"
+                                value="#{todoController.selected.description}"
+                                styleClass="todo-edit"
+                                autocomplete="off"
+                        />
+                        <p:hotkey global="" bind="esc" update=":todoList" action="#{todoController.cancelEdit}"/>
+                        <div class="input-group-append">
+                            <p:commandButton
+                                    id="save"
+                                    styleClass="todo-save"
+                                    update=":todoList"
+                                    action="#{todoController.saveTodo(todo)}"
+                                    icon="ui-icon-save"
+                            />
+                        </div>
+                    </h:form>
+                    <h:form layout="block" class="input-group" rendered="#{!todoController.isEditing(todo)}">
                         <h:selectBooleanCheckbox
                                 styleClass="todo-status"
                                 value="#{todo.completed}"
                                 id="complete"
-                        />
-                        <h:outputLabel class="todo-content" for="complete">#{todo.description}</h:outputLabel>
+                        >
+                            <p:ajax
+                                    event="change"
+                                    listener="#{todoController.saveTodo(todo)}"
+                                    update=":todoList:todoItem"
+
+                            />
+                        </h:selectBooleanCheckbox>
+                        <h:outputLabel class="checkbox" for="complete">
+                            <h:outputText styleClass="check" rendered="#{todo.completed}"/>
+                            <h:outputText styleClass="box" rendered="#{!todo.completed}"/>
+                        </h:outputLabel>
+                        <h:outputLabel
+                                class="todo-content"
+                                id="todo"
+                        >
+                            #{todo.description}
+                            <p:ajax
+                                    event="dblclick"
+                                    listener="#{todoController.editTodo(todo)}"
+                                    oncomplete="focusFix(jQuery('.todo-edit'))"
+                                    update=":todoList"
+
+                            />
+                        </h:outputLabel>
                         <div class="input-group-append">
                             <p:commandButton
                                     styleClass="remove"
@@ -78,9 +129,10 @@
                                     action="#{todoController.removeTodo(todo)}"
                                     icon="ui-icon-trash"
                             />
+
                         </div>
-                    </div>
-                </div>
+                    </h:form>
+                </h:panelGroup>
             </p:dataList>
         </main>
 
@@ -91,6 +143,15 @@
             </div>
         </footer>
     </div>
+
+    <script>
+        function focusFix(input) {
+            input.focus();
+            var tmpStr = input.val();
+            input.val('');
+            input.val(tmpStr);
+        }
+    </script>
 
 
     <!-- Bootstrap core JavaScript

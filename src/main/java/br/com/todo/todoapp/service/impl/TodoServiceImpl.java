@@ -28,6 +28,7 @@ public class TodoServiceImpl implements TodoService {
         return this.repository.save(todo);
     }
 
+
     @Override
     public void remove(Todo todo) {
         this.repository.delete(todo);
