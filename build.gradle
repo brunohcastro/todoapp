@@ -25,7 +25,7 @@ dependencies {
 	implementation 'org.primefaces:primefaces:6.2'
 
 	implementation 'org.webjars:bootstrap:4.3.1'
-	implementation 'org.webjars:font-awesome:4.7.0'
+	implementation 'org.webjars.npm:popper.js:1.14.7'
 
 	runtime 'org.hsqldb:hsqldb:2.3.2'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'

@@ -2,59 +2,76 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core">
 <h:head>
     <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <meta name="description" content=""/>
-    <meta name="author" content=""/>
+    <meta name="description" content="Todo App"/>
+    <meta name="author" content="Bruno Castro"/>
 
     <title>TODO App</title>
 
-    <!-- Bootstrap Core CSS -->
-    <h:outputStylesheet library="webjars" name="bootstrap/4.3.1/css/bootstrap.min.css"/>
+    <!-- Bootstrap -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet"/>
 
-    <!-- FontAwesome -->
-    <h:outputStylesheet library="webjars" name="font-awesome/5.8.1/css/all.min.css"/>
+    <!-- MaterialIcons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
 
-    <!-- Custom CSS -->
+    <!-- ForkMeOnGithubCss -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.2.2/gh-fork-ribbon.min.css"/>
+
+    <!-- CustomCSS -->
     <link href="#{facesContext.externalContext.requestContextPath}/resources/css/main.css" rel="stylesheet"/>
 
-    <!-- HTML5 Shim and Respond.js IE8 core of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
 </h:head>
+
 <h:body class="text-center">
 
-    <div class="cover-container d-flex h-100 p-3 mx-auto flex-column">
-        <main class="inner cover">
-            <h:form id="todoForm" autocomplete="off">
-                <div class="input-group mb3">
-                    <p:inputText
-                            id="content"
-                            value="#{todoController.todo.description}"
-                            styleClass="todo-input"
-                            placeholder="Qual a próxima tarefa?"
-                            autocomplete="off"
-                    />
+    <a class="github-fork-ribbon" href="https://github.com/brunohcastro/todoapp" data-ribbon="Fork me on GitHub"
+       title="Fork me on GitHub">Fork me on GitHub</a>
 
-                    <div class="input-group-append">
-                        <p:commandButton
-                                styleClass="todo-add"
-                                update="@form :todoList"
-                                action="#{todoController.createTodo}"
-                                icon="ui-icon-check"
-                        />
-                    </div>
+    <!-- Container -->
+    <div class="d-flex h-100 p-3 mx-auto flex-column">
+
+        <!-- MainContent -->
+        <main class="main">
+
+            <!-- TodoCreateForm -->
+            <h:form id="todoForm" class="input-group" autocomplete="off">
+
+                <!-- KeyboardCmd -->
+                <p:remoteCommand name="clearTodo" update=":todoForm" action="#{todoController.clearTodo}"/>
+                <p:defaultCommand target="add"/>
+
+                <!-- InputField -->
+                <p:inputText
+                        id="todoInput"
+                        styleClass="todo-input"
+                        value="#{todoController.todo.description}"
+                        placeholder="Qual a próxima tarefa?"
+                        autocomplete="off"
+                        required="true"
+                >
+                    <!-- Needed for loading the jQuery plugin in the view -->
+                    <p:hotkey bind="esc" handler="clearTodo();"/>
+                </p:inputText>
+
+                <!-- CreateBtn -->
+                <div class="input-group-append">
+                    <p:commandLink
+                            id="add"
+                            styleClass="btn btn-primary todo-add"
+                            update="@form :todoList"
+                            action="#{todoController.create}"
+                            oncomplete="bindResetInput()"
+                    >
+                        <span class="material-icons">add</span>
+                    </p:commandLink>
                 </div>
             </h:form>
 
+            <!-- TodoList -->
             <p:dataList
                     id="todoList"
                     var="todo"
@@ -63,36 +80,75 @@
                     itemType="none"
                     emptyMessage=""
             >
+
+                <f:facet name="header">
+                    <h:panelGroup
+                            styleClass="empty-list"
+                            layout="block"
+                            rendered="#{!todoController.hasTodos() and todoController.todoCount > 0}"
+                    >
+                        <i class="material-icons">
+                            inbox
+                        </i>
+                        <h:outputText
+                                styleClass="no-todo"
+                                value="Nenhuma tarefa para o filtro especificado"
+
+                        />
+                    </h:panelGroup>
+                </f:facet>
+
+                <!-- TodoListItem -->
                 <h:panelGroup layout="block" id="todoItem" class="todo-item">
+
+                    <!-- TodoEditForm -->
                     <h:form layout="block" class="input-group" rendered="#{todoController.isEditing(todo)}">
+
+                        <!-- KeyboardCmd -->
+                        <p:remoteCommand name="cancelEdit" update=":todoList" action="#{todoController.cancelEdit}"/>
                         <p:defaultCommand target="save"/>
+
+                        <!-- CancelBtn -->
                         <div class="input-group-prepend">
-                            <p:commandButton
-                                    styleClass="edit-cancel"
+                            <p:commandLink
+                                    styleClass="btn edit-cancel"
                                     update=":todoList:todoItem"
                                     action="#{todoController.cancelEdit}"
-                                    icon="ui-icon-close"
-                                    id="edit-cancel"
-                            />
+                            >
+                                <span class="material-icons">close</span>
+                            </p:commandLink>
                         </div>
+
+                        <!-- EditField -->
                         <p:inputText
                                 id="editing"
                                 value="#{todoController.selected.description}"
                                 styleClass="todo-edit"
                                 autocomplete="off"
-                        />
-                        <p:hotkey global="" bind="esc" update=":todoList" action="#{todoController.cancelEdit}"/>
+                        >
+                            <!-- Needed for loading the jQuery plugin in the view -->
+                            <p:hotkey bind="esc" handler="cancelEdit();"/>
+                        </p:inputText>
+
+                        <!-- SaveBtn -->
                         <div class="input-group-append">
-                            <p:commandButton
+                            <p:commandLink
                                     id="save"
-                                    styleClass="todo-save"
+                                    styleClass="btn todo-save"
                                     update=":todoList"
-                                    action="#{todoController.saveTodo(todo)}"
-                                    icon="ui-icon-save"
-                            />
+                                    action="#{todoController.save(todo)}"
+                                    icon="ui-icon-disk"
+                            >
+                                <span class="material-icons">check</span>
+                            </p:commandLink>
                         </div>
+
                     </h:form>
+
+                    <!-- TodoDisplayForm -->
                     <h:form layout="block" class="input-group" rendered="#{!todoController.isEditing(todo)}">
+
+                        <!-- Checkbox -->
                         <h:selectBooleanCheckbox
                                 styleClass="todo-status"
                                 value="#{todo.completed}"
@@ -100,66 +156,181 @@
                         >
                             <p:ajax
                                     event="change"
-                                    listener="#{todoController.saveTodo(todo)}"
-                                    update=":todoList:todoItem"
+                                    listener="#{todoController.save(todo)}"
+                                    update=":todoList"
 
                             />
                         </h:selectBooleanCheckbox>
                         <h:outputLabel class="checkbox" for="complete">
-                            <h:outputText styleClass="check" rendered="#{todo.completed}"/>
-                            <h:outputText styleClass="box" rendered="#{!todo.completed}"/>
+                            <h:outputText styleClass="box"/>
+                            <h:outputText styleClass="check"/>
                         </h:outputLabel>
+
+                        <!-- Content -->
                         <h:outputLabel
                                 class="todo-content"
                                 id="todo"
                         >
-                            #{todo.description}
+                            <h:outputText value="#{todo.description}"/>
                             <p:ajax
                                     event="dblclick"
-                                    listener="#{todoController.editTodo(todo)}"
+                                    listener="#{todoController.edit(todo)}"
                                     oncomplete="focusFix(jQuery('.todo-edit'))"
                                     update=":todoList"
 
                             />
                         </h:outputLabel>
+
+                        <!-- DeleteBtn -->
                         <div class="input-group-append">
-                            <p:commandButton
-                                    styleClass="remove"
+                            <p:commandLink
+                                    styleClass="btn remove"
                                     update=":todoList"
-                                    action="#{todoController.removeTodo(todo)}"
-                                    icon="ui-icon-trash"
-                            />
+                                    action="#{todoController.delete(todo)}"
+                            >
+                                <span class="material-icons">delete</span>
+                            </p:commandLink>
 
                         </div>
+
                     </h:form>
+
                 </h:panelGroup>
+
+                <f:facet name="footer">
+                    <h:panelGroup
+                            styleClass="toolbar"
+                            layout="block"
+                            rendered="#{todoController.todoCount > 0}"
+                    >
+                        <div class="todo-count">
+                            <h:panelGroup
+                                    layout="block"
+                                    rendered="#{todoController.pendingTodosCount > 1}"
+                            >
+                                <h:outputText value="#{todoController.pendingTodosCount}"/>
+                                tarefa<h:outputText value="s" rendered="#{todoController.pendingTodosCount != 1}"/>
+                                pendente<h:outputText value="s" rendered="#{todoController.pendingTodosCount != 1}"/>
+                            </h:panelGroup>
+                            <h:panelGroup
+                                    layout="block"
+                                    rendered="#{todoController.pendingTodosCount == 1}"
+                            >
+                                1 tarefa pendente
+                            </h:panelGroup>
+                            <h:panelGroup
+                                    layout="block"
+                                    rendered="#{todoController.pendingTodosCount == 0}"
+                            >
+                                Nenhuma tarefa pendente
+                            </h:panelGroup>
+                        </div>
+
+                        <h:form class="dropdown show">
+                            <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            </button>
+
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+                                <p:commandLink
+                                        styleClass="#{todoController.filter == todoController.completedFilter ? 'dropdown-item active' : 'dropdown-item'}"
+                                        action="#{todoController.filterCompleted}"
+                                        update=":todoList"
+                                        disabled="#{!todoController.canFilter(todoController.completedFilter)}"
+                                >
+                                    Completos
+                                </p:commandLink>
+                                <p:commandLink
+                                        styleClass="#{todoController.filter == todoController.pendingFilter ? 'dropdown-item active' : 'dropdown-item'}"
+                                        action="#{todoController.filterPending}"
+                                        update=":todoList"
+                                        disabled="#{!todoController.canFilter(todoController.pendingFilter)}"
+                                >
+                                    Pendentes
+                                </p:commandLink>
+                                <div class="dropdown-divider"></div>
+                                <p:commandLink
+                                        styleClass="dropdown-item"
+                                        action="#{todoController.deleteCompleted}"
+                                        update=":todoList"
+                                        disabled="#{todoController.completedTodosCount == 0}"
+                                >
+                                    Apagar completos
+                                </p:commandLink>
+                                <p:commandLink
+                                        styleClass="dropdown-item"
+                                        action="#{todoController.deleteAll}"
+                                        update=":todoList"
+                                >
+                                    Apagar todos
+                                </p:commandLink>
+                            </div>
+                        </h:form>
+
+                        <div class="clearfix"></div>
+                    </h:panelGroup>
+                </f:facet>
             </p:dataList>
         </main>
 
-        <footer class="mastfoot mt-auto">
-            <div class="inner">
+        <!-- Footer -->
+        <footer class="foot mt-auto">
+            <div>
                 <p>Feito com ❤ por <a href="mailto://brunohcastro@gmail.com">Bruno Castro</a>, <a
                         href="https://twitter.com/brunohcastro">@brunohcastro</a>.</p>
             </div>
         </footer>
     </div>
 
-    <script>
+    <script type="application/javascript">
+
+        /**
+         * Captures focus to the newly applied input
+         * and binds the esc key to cancel the edition.
+         *
+         * @param input
+         */
         function focusFix(input) {
             input.focus();
             var tmpStr = input.val();
             input.val('');
             input.val(tmpStr);
+
+            input.bind('keydown', 'esc', function () {
+                cancelEdit();
+                return false;
+            });
         }
+
+        /**
+         * Binds the main input hotkey for reseting the form
+         */
+        function bindResetInput() {
+            var input = $('#todoForm\\:todoInput');
+
+            function clearAndRebind() {
+                clearTodo();
+
+                // monkey patch for when the form reloads and the binding is lost;
+                setTimeout(bindResetInput, 100);
+                return false;
+            }
+
+            input.unbind('keydown', clearAndRebind);
+            input.bind('keydown', 'esc', clearAndRebind);
+        }
+
+        $(document).ready(function () {
+            $('.dropdown-toggle').dropdown();
+            bindResetInput();
+        });
+
+
     </script>
 
-
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
+    <!-- JQuery -->
     <h:outputScript library="primefaces" name="jquery/jquery.js"/>
-    <!-- <script src="../../assets/js/vendor/popper.min.js"></script> -->
-    <!-- Bootstrap Core JavaScript -->
-    <h:outputScript library="webjars" name="bootstrap/4.3.1/js/bootstrap.min.js"/>
+
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
 </h:body>
 </html>

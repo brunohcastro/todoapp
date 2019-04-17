@@ -7,23 +7,12 @@ a,
 a:focus,
 a:hover {
     color: #fff;
+    outline: none;
 }
-
-/* Custom default button */
-.btn-secondary,
-.btn-secondary:hover,
-.btn-secondary:focus {
-    color: #333;
-    text-shadow: none; /* Prevent inheritance from `body` */
-    background-color: #fff;
-    border: .05rem solid #fff;
-}
-
 
 /*
  * Base structure
  */
-
 html,
 body {
     height: 100%;
@@ -38,21 +27,20 @@ body {
     -webkit-box-pack: center;
     justify-content: center;
     color: #fff;
-    box-shadow: inset 0 0 5rem rgba(0, 0, 0, .5);
 }
 
 /*
  * Header
  */
-.masthead {
+.head {
     margin-bottom: 2rem;
 }
 
-.masthead-brand {
+.head-brand {
     margin-bottom: 0;
 }
 
-.nav-masthead .nav-link {
+.nav-head .nav-link {
     padding: .25rem 0;
     font-weight: 700;
     color: rgba(255, 255, 255, .5);
@@ -60,26 +48,26 @@ body {
     border-bottom: .25rem solid transparent;
 }
 
-.nav-masthead .nav-link:hover,
-.nav-masthead .nav-link:focus {
+.nav-head .nav-link:hover,
+.nav-head .nav-link:focus {
     border-bottom-color: rgba(255, 255, 255, .25);
 }
 
-.nav-masthead .nav-link + .nav-link {
+.nav-head .nav-link + .nav-link {
     margin-left: 1rem;
 }
 
-.nav-masthead .active {
+.nav-head .active {
     color: #fff;
     border-bottom-color: #fff;
 }
 
 @media (min-width: 48em) {
-    .masthead-brand {
+    .head-brand {
         float: left;
     }
 
-    .nav-masthead {
+    .nav-head {
         float: right;
     }
 }
@@ -168,12 +156,8 @@ ul {
     border-bottom: 1px #eee solid;
 }
 
-.ui-datalist-item:last-child .todo-item {
-    border-bottom: none;
-}
-
 .ui-datalist-item:first-child .todo-item {
-    border-top: 2px #ddd double;
+    border-top: 1px #ddd solid;
 }
 
 .todo-item .todo-status {
@@ -196,6 +180,18 @@ ul {
 
 .ui-datalist-content {
     border: none;
+}
+
+.ui-datalist-footer {
+    border-radius: 0;
+    padding: 0 !important;
+    border: none !important;
+}
+
+.ui-datalist-header {
+    border-radius: 0;
+    padding: 0 !important;
+    border: 0 !important;
 }
 
 .todo-item .todo-content {
@@ -235,27 +231,87 @@ li:hover .remove {
     flex-wrap: nowrap;
 }
 
+.toolbar .todo-count {
+    text-align: left;
+    font-size: 14px;
+    font-weight: 100;
+    line-height: 22px;
+    float: left;
+    padding: 4px 10px;
+}
+
+.toolbar .dropdown {
+    float: right;
+}
+
+.toolbar .dropdown-toggle {
+    height: 30px;
+    background: #777777;
+    width: 60px;
+    border-radius: 0;
+    color: #fff;
+}
+
+.toolbar .dropdown-toggle:focus {
+    box-shadow: none;
+}
+
+.toolbar .dropdown-toggle:hover {
+    filter: brightness(80%);
+}
+
+.toolbar .dropdown-toggle::after {
+    margin-left: 0;
+    vertical-align: .4em;
+}
+
+.toolbar .dropdown-menu {
+    border-radius: 0;
+}
+
+.empty-list {
+    background: #fff;
+    color: rgba(0,0,0,0.55)
+}
+
+.empty-list .material-icons {
+    font-size: 70px;
+    padding-top: 20px;
+}
+
+.no-todo {
+    padding: 15px 15px 15px 15px;
+    display: block;
+    line-height: 40px;
+}
+
 main {
     margin-top: 60px;
+    margin-bottom: 30px;
 }
 
 /*
  * Cover
  */
-.cover {
+.main {
     padding: 0 1.5rem;
     width: 100%;
 }
 
-
 /*
  * Footer
  */
-.mastfoot {
+.foot {
     color: rgba(255, 255, 255, .5);
 }
 
-/* style all of our span tags with position absolute and over to the left */
+/*
+ * Checkbox
+ */
+.checkbox, input[type="checkbox"] {
+    cursor: pointer;
+}
+
 .checkbox span {
     display: block;
     position: absolute;
@@ -264,7 +320,6 @@ main {
     transition-duration: 0.3s;
 }
 
-/* style our box */
 .checkbox .box {
     border: 2px solid #ccc;
     height: 20px;
@@ -275,7 +330,6 @@ main {
     transition-delay: 0.2s;
 }
 
-/* style the check. give it a border on the bottom and right only and then rotate */
 .checkbox .check {
     margin: auto;
     top: -8px;
@@ -288,5 +342,37 @@ main {
     z-index: 888;
     transform: rotate(45deg);
     transition-delay: 0.3s;
+    display: none;
 }
 
+.todo-item .todo-status:checked ~ .checkbox .box {
+    border: 2px solid #eee;
+}
+
+.todo-item .todo-status:checked ~ .checkbox .check {
+    display: block;
+}
+
+/*
+ * Material Icons
+ */
+a .material-icons {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    color: #fff;
+    transform: translate(-50%, -50%);
+}
+
+a.btn {
+    transition: .2s;
+    box-shadow: none !important;
+}
+
+a.btn:hover {
+    filter: brightness(80%);
+}
+
+a.btn:hover .material-icons {
+    filter: brightness(100%);
+}

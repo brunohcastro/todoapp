@@ -17,7 +17,7 @@ public class Todo implements Serializable {
     private String description;
 
     @Column(name = "is_completed", length = 1, columnDefinition = "BIT")
-    private Boolean isCompleted = false;
+    private Boolean completed = false;
 
     public Integer getId() {
         return id;
@@ -36,11 +36,11 @@ public class Todo implements Serializable {
     }
 
     public Boolean getCompleted() {
-        return isCompleted;
+        return completed;
     }
 
     public void setCompleted(Boolean completed) {
-        isCompleted = completed;
+        this.completed = completed;
     }
 
     @Override
