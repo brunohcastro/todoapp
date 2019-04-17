@@ -39,6 +39,8 @@
 
             <!-- TodoCreateForm -->
             <h:form id="todoForm" class="input-group" autocomplete="off">
+                <!-- Needed so the plugin is loaded on the page -->
+                <p:hotkey bind="esc"/>
 
                 <!-- KeyboardCmd -->
                 <p:remoteCommand name="clearTodo" update=":todoForm" action="#{todoController.clearTodo}"/>
@@ -64,11 +66,7 @@
                         value="#{todoController.todo.description}"
                         placeholder="Qual a próxima tarefa?"
                         autocomplete="off"
-                        required="true"
-                >
-                    <!-- Needed for loading the jQuery plugin in the view -->
-                    <p:hotkey bind="esc" handler="clearTodo();"/>
-                </p:inputText>
+                />
 
                 <!-- CreateBtn -->
                 <div class="input-group-append">
@@ -119,14 +117,20 @@
                     <h:form layout="block" class="input-group" rendered="#{todoController.isEditing(todo)}">
 
                         <!-- KeyboardCmd -->
-                        <p:remoteCommand name="cancelEdit" update=":todoList" action="#{todoController.cancelEdit}"/>
+                        <p:remoteCommand
+                                name="cancelEdit"
+                                process="@this"
+                                update=":todoList"
+                                action="#{todoController.cancelEdit}"
+                        />
                         <p:defaultCommand target="save"/>
 
                         <!-- CancelBtn -->
                         <div class="input-group-prepend">
                             <p:commandLink
                                     styleClass="btn edit-cancel"
-                                    update=":todoList:todoItem"
+                                    update=":todoList"
+                                    process="@this"
                                     action="#{todoController.cancelEdit}"
                             >
                                 <span class="material-icons">close</span>
@@ -139,10 +143,8 @@
                                 value="#{todoController.selected.description}"
                                 styleClass="todo-edit"
                                 autocomplete="off"
-                        >
-                            <!-- Needed for loading the jQuery plugin in the view -->
-                            <p:hotkey bind="esc" handler="cancelEdit();"/>
-                        </p:inputText>
+                                required="true"
+                        />
 
                         <!-- SaveBtn -->
                         <div class="input-group-append">
@@ -227,9 +229,7 @@
                                     layout="block"
                                     rendered="#{todoController.pendingTodosCount > 1}"
                             >
-                                <h:outputText value="#{todoController.pendingTodosCount}"/>
-                                tarefa<h:outputText value="s" rendered="#{todoController.pendingTodosCount != 1}"/>
-                                pendente<h:outputText value="s" rendered="#{todoController.pendingTodosCount != 1}"/>
+                                <h:outputText value="#{todoController.pendingTodosCount} tarefas pendentes"/>
                             </h:panelGroup>
 
                             <!-- SinglePendingTodo -->
@@ -331,10 +331,14 @@
             input.val('');
             input.val(tmpStr);
 
-            input.bind('keydown', 'esc', function () {
+            function cancelEditListener() {
                 cancelEdit();
+
+                $(this).unbind('keydown', cancelEditListener)
                 return false;
-            });
+            }
+
+            input.bind('keydown', 'esc', cancelEditListener);
         }
 
         /**

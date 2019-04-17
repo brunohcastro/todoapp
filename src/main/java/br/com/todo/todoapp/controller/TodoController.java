@@ -195,6 +195,10 @@ public class TodoController implements Serializable {
      * Toggle all todos status
      */
     public void toggleAllTodoStatus() {
+        if (todoCount == 0) {
+            return;
+        }
+
         if (getAllCompleted()) {
             todoService.markAllAsPending();
         } else {

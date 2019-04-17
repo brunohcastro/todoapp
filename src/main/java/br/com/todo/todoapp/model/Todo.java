@@ -1,6 +1,7 @@
 package br.com.todo.todoapp.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -13,6 +14,7 @@ public class Todo implements Serializable {
     @Column(name = "id")
     private Integer id;
 
+    @NotEmpty
     @Column(name = "description", nullable = false, length = 150)
     private String description;
 
