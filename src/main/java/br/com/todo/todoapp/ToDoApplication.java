@@ -1,5 +1,7 @@
 package br.com.todo.todoapp;
 
+import br.com.todo.todoapp.util.ViewScope;
+import org.springframework.beans.factory.config.CustomScopeConfigurer;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
@@ -11,6 +13,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.faces.webapp.FacesServlet;
 import javax.servlet.ServletContext;
+import java.util.HashMap;
+import java.util.Map;
 
 @SpringBootApplication
 public class ToDoApplication implements WebMvcConfigurer, ServletContextAware {
@@ -25,6 +29,17 @@ public class ToDoApplication implements WebMvcConfigurer, ServletContextAware {
         registration.setName("Faces Servlet");
         registration.setLoadOnStartup(1);
         return registration;
+    }
+
+    @Bean
+    public static CustomScopeConfigurer customScopeConfigurer() {
+        Map<String, Object> scopes = new HashMap<>();
+        scopes.put("view", new ViewScope());
+
+        CustomScopeConfigurer customScopeConfigurer = new CustomScopeConfigurer();
+        customScopeConfigurer.setScopes(scopes);
+
+        return customScopeConfigurer;
     }
 
     @Override

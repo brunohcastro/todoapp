@@ -44,6 +44,19 @@
                 <p:remoteCommand name="clearTodo" update=":todoForm" action="#{todoController.clearTodo}"/>
                 <p:defaultCommand target="add"/>
 
+                <!-- CancelBtn -->
+                <div class="input-group-prepend">
+                    <p:commandLink
+                            id="checkAll"
+                            styleClass="btn btn-default check-all #{todoController.allCompleted ? 'active' : ''}"
+                            update="@this :todoList"
+                            action="#{todoController.toggleAllTodoStatus}"
+                            process="@this"
+                    >
+                        <span class="material-icons">done_all</span>
+                    </p:commandLink>
+                </div>
+
                 <!-- InputField -->
                 <p:inputText
                         id="todoInput"
@@ -81,6 +94,7 @@
                     emptyMessage=""
             >
 
+                <!-- EmptyFilterMessage -->
                 <f:facet name="header">
                     <h:panelGroup
                             styleClass="empty-list"
@@ -157,10 +171,11 @@
                             <p:ajax
                                     event="change"
                                     listener="#{todoController.save(todo)}"
-                                    update=":todoList"
+                                    update=":todoList :todoForm:checkAll"
 
                             />
                         </h:selectBooleanCheckbox>
+
                         <h:outputLabel class="checkbox" for="complete">
                             <h:outputText styleClass="box"/>
                             <h:outputText styleClass="check"/>
@@ -197,13 +212,17 @@
 
                 </h:panelGroup>
 
+                <!-- Toolbar -->
                 <f:facet name="footer">
                     <h:panelGroup
                             styleClass="toolbar"
                             layout="block"
                             rendered="#{todoController.todoCount > 0}"
                     >
+                        <!-- PendingTodoCount -->
                         <div class="todo-count">
+
+                            <!-- ManyPendingTodos -->
                             <h:panelGroup
                                     layout="block"
                                     rendered="#{todoController.pendingTodosCount > 1}"
@@ -212,12 +231,16 @@
                                 tarefa<h:outputText value="s" rendered="#{todoController.pendingTodosCount != 1}"/>
                                 pendente<h:outputText value="s" rendered="#{todoController.pendingTodosCount != 1}"/>
                             </h:panelGroup>
+
+                            <!-- SinglePendingTodo -->
                             <h:panelGroup
                                     layout="block"
                                     rendered="#{todoController.pendingTodosCount == 1}"
                             >
                                 1 tarefa pendente
                             </h:panelGroup>
+
+                            <!-- NoPendingTodo -->
                             <h:panelGroup
                                     layout="block"
                                     rendered="#{todoController.pendingTodosCount == 0}"
@@ -226,41 +249,53 @@
                             </h:panelGroup>
                         </div>
 
+                        <!-- FilterAndOptionMenu -->
                         <h:form class="dropdown show">
+
+                            <!-- MenuToggle -->
                             <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton"
-                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    data-toggle="dropdown" aria-expanded="false">
                             </button>
 
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+
+                                <!-- CompletedFilter -->
                                 <p:commandLink
                                         styleClass="#{todoController.filter == todoController.completedFilter ? 'dropdown-item active' : 'dropdown-item'}"
-                                        action="#{todoController.filterCompleted}"
+                                        action="#{todoController.toggleCompletedFilter}"
                                         update=":todoList"
                                         disabled="#{!todoController.canFilter(todoController.completedFilter)}"
                                 >
                                     Completos
                                 </p:commandLink>
+
+                                <!-- PendingFilter -->
                                 <p:commandLink
                                         styleClass="#{todoController.filter == todoController.pendingFilter ? 'dropdown-item active' : 'dropdown-item'}"
-                                        action="#{todoController.filterPending}"
+                                        action="#{todoController.togglePendingFilter}"
                                         update=":todoList"
                                         disabled="#{!todoController.canFilter(todoController.pendingFilter)}"
                                 >
                                     Pendentes
                                 </p:commandLink>
+
                                 <div class="dropdown-divider"></div>
+
+                                <!-- DeleteCompletedOpt -->
                                 <p:commandLink
                                         styleClass="dropdown-item"
                                         action="#{todoController.deleteCompleted}"
-                                        update=":todoList"
+                                        update=":todoList :todoForm:checkAll"
                                         disabled="#{todoController.completedTodosCount == 0}"
                                 >
                                     Apagar completos
                                 </p:commandLink>
+
+                                <!-- DeleteAllOpt -->
                                 <p:commandLink
                                         styleClass="dropdown-item"
                                         action="#{todoController.deleteAll}"
-                                        update=":todoList"
+                                        update=":todoList :todoForm:checkAll"
                                 >
                                     Apagar todos
                                 </p:commandLink>

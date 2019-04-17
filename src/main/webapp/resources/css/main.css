@@ -94,7 +94,7 @@ ul {
     border: none !important;
     border-radius: 0;
     outline: none;
-    padding: 15px 15px 15px 60px;
+    padding: 15px 15px 15px 20px;
     font-size: 21px;
     width: 100%;
     background: #ededed;
@@ -117,16 +117,14 @@ ul {
     text-decoration: line-through;
 }
 
-.todo-item .todo-status + .todo-content {
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="-10 -18 100 135"><circle cx="50" cy="50" r="50" fill="none" stroke="#000000" stroke-width="3"/></svg>');
-    background-repeat: no-repeat;
-    background-position: center left;
-}
-
 .todo-input:focus, .todo-edit:focus {
     -webkit-box-shadow: none !important;
     -moz-box-shadow: none !important;
     box-shadow: none !important;
+}
+
+#todoForm {
+    background: #ededed;
 }
 
 .todo-add, .todo-save, .edit-cancel {
@@ -139,10 +137,23 @@ ul {
     width: 60px
 }
 
+.check-all {
+    background-color: transparent;
+    width: 40px;
+    transition: all .2s;
+}
+
+.check-all .material-icons {
+    color: rgba(0, 0, 0, 0.2);
+}
+
+.check-all.active .material-icons {
+    color: rgba(0, 0, 0, 0.8);
+}
+
 .edit-cancel {
     background-color: darkorange !important;
     width: 40px;
-    background: url('data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%E2%80%A62none%22%20stroke%3D%22%23ededed%22%20stroke-width%3D%223%22/%3E%3C/svg%3E');
 }
 
 .todo-save {
@@ -328,6 +339,7 @@ main {
     margin: auto;
     z-index: 888;
     transition-delay: 0.2s;
+    transition: .2s;
 }
 
 .checkbox .check {
@@ -340,9 +352,9 @@ main {
     border-top: none;
     border-left: none;
     z-index: 888;
-    transform: rotate(45deg);
-    transition-delay: 0.3s;
-    display: none;
+    opacity: 0;
+    transition-delay: .2s;
+    transition: .3s;
 }
 
 .todo-item .todo-status:checked ~ .checkbox .box {
@@ -350,7 +362,8 @@ main {
 }
 
 .todo-item .todo-status:checked ~ .checkbox .check {
-    display: block;
+    opacity: 1;
+    transform: rotate(45deg);
 }
 
 /*

@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-@Scope("session")
+@Scope("view")
 public class TodoController implements Serializable {
 
     private enum TodoFilter {
@@ -21,17 +21,17 @@ public class TodoController implements Serializable {
     }
 
     private Todo todo = new Todo();
+    private Todo selected;
 
     private List<Todo> todos = new ArrayList<>();
-
-    private final TodoService todoService;
-    private Todo selected;
 
     private long todoCount;
     private long completedTodosCount;
     private long pendingTodosCount;
 
     private TodoFilter filter = null;
+
+    private final TodoService todoService;
 
     @Autowired
     public TodoController(TodoService todoService) {
@@ -48,7 +48,7 @@ public class TodoController implements Serializable {
      */
 
     /**
-     * Load TODOS respecting the active filters.
+     * Load TODOS respecting the active filter.
      */
     private void loadTodos() {
         if (this.filter == TodoFilter.PENDING) {
@@ -60,6 +60,9 @@ public class TodoController implements Serializable {
         }
     }
 
+    /**
+     * Load all necessary data from the database
+     */
     private void loadData() {
         completedTodosCount = todoService.countCompleted();
         pendingTodosCount = todoService.countPending();
@@ -68,6 +71,11 @@ public class TodoController implements Serializable {
         loadTodos();
     }
 
+    /**
+     * Checks if the todos list is not empty.
+     *
+     * @return true if todos size is higher than 0.
+     */
     public Boolean hasTodos() {
         return this.todos.size() > 0;
     }
@@ -75,7 +83,12 @@ public class TodoController implements Serializable {
     /*
      * Filtering
      */
-    public void filterCompleted() {
+
+    /**
+     * Load only completed todos and sets the filter to {@link TodoFilter#COMPLETED} if not already
+     * set. Clear the filter otherwise.
+     */
+    public void toggleCompletedFilter() {
         if (this.filter == TodoFilter.COMPLETED) {
             clearFilters();
             return;
@@ -85,7 +98,11 @@ public class TodoController implements Serializable {
         loadTodos();
     }
 
-    public void filterPending() {
+    /**
+     * Load only pending todos and sets the filter to {@link TodoFilter#PENDING} if not already
+     * set. Clear the filter otherwise.
+     */
+    public void togglePendingFilter() {
         if (this.filter == TodoFilter.PENDING) {
             clearFilters();
             return;
@@ -95,11 +112,21 @@ public class TodoController implements Serializable {
         loadTodos();
     }
 
+    /**
+     * Remove any applied filter and reload all todos
+     */
     private void clearFilters() {
         this.filter = null;
         loadTodos();
     }
 
+    /**
+     * Checks if the given filter can be applied based on the amount of
+     * todos to be filtered.
+     *
+     * @param filterType Filter type to check
+     * @return true if the filter doesn't return a empty list of todos
+     */
     public boolean canFilter(TodoFilter filterType) {
         if (filterType == TodoFilter.COMPLETED) {
             return completedTodosCount > 0 || filter == TodoFilter.COMPLETED;
@@ -115,6 +142,7 @@ public class TodoController implements Serializable {
     /*
      * Deleting
      */
+
     public void delete(Todo todo) {
         todoService.delete(todo.getId());
         loadData();
@@ -138,6 +166,12 @@ public class TodoController implements Serializable {
         this.selected = todo;
     }
 
+    /**
+     * Check if given instance is beign edited
+     *
+     * @param todo the instance to be checked
+     * @return true if tod'o is selected for edition
+     */
     public Boolean isEditing(Todo todo) {
         return this.selected != null && this.selected.equals(todo);
     }
@@ -154,6 +188,31 @@ public class TodoController implements Serializable {
     }
 
     /*
+     * Updating
+     */
+
+    /**
+     * Toggle all todos status
+     */
+    public void toggleAllTodoStatus() {
+        if (getAllCompleted()) {
+            todoService.markAllAsPending();
+        } else {
+            todoService.markAllAsCompleted();
+        }
+
+        loadData();
+    }
+
+    /**
+     * Check if every tod'o is marked as completed
+     * @return true if all todos are marked as completed
+     */
+    public Boolean getAllCompleted() {
+        return this.todoCount > 0 && this.completedTodosCount == this.todoCount;
+    }
+
+    /*
      * Creating
      */
     public void create() {
@@ -167,13 +226,13 @@ public class TodoController implements Serializable {
         this.todo = new Todo();
     }
 
+    /*
+     * Getters and Setters
+     */
     public List<Todo> getTodos() {
         return todos;
     }
 
-    /*
-     * Getters and Setters
-     */
     public Todo getTodo() {
         return todo;
     }

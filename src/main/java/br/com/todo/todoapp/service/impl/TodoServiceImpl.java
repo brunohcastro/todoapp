@@ -62,6 +62,16 @@ public class TodoServiceImpl implements TodoService {
     }
 
     @Override
+    public void markAllAsCompleted() {
+        this.repository.markAllAsCompleted();
+    }
+
+    @Override
+    public void markAllAsPending() {
+        this.repository.markAllAsPending();
+    }
+
+    @Override
     public void delete(Integer id) {
         this.repository.deleteById(id);
     }

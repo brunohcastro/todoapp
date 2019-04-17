@@ -18,6 +18,10 @@ public interface TodoService {
 
     Todo save(Todo todo);
 
+    void markAllAsCompleted();
+
+    void markAllAsPending();
+
     void delete(Integer id);
 
     long countCompleted();
