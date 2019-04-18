@@ -20,7 +20,7 @@ DEMO: https://todoing-react.herokuapp.com
 
 ## Itens contemplados
 
-Os itens do desafio que foram cumpridos por essa implementação são: A. B. C. D. E. F. H. G. e I.
+Os itens do desafio que foram cumpridos por essa implementação são: A. B. C. D. E. F. G. H. e I.
 
 ## Sobre o sistema
 
