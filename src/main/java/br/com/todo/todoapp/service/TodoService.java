@@ -3,10 +3,8 @@ package br.com.todo.todoapp.service;
 import br.com.todo.todoapp.model.Todo;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface TodoService {
-    Optional<Todo> find(Integer id);
 
     List<Todo> findAll();
 
@@ -18,9 +16,11 @@ public interface TodoService {
 
     Todo save(Todo todo);
 
-    void markAllAsCompleted();
+    void updateDescription(Integer id, String description);
 
-    void markAllAsPending();
+    void toggleStatus(Integer id);
+
+    void toggleAllStatus();
 
     void delete(Integer id);
 

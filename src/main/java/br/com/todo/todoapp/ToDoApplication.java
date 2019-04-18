@@ -45,7 +45,7 @@ public class ToDoApplication implements WebMvcConfigurer, ServletContextAware {
     @Override
     public void setServletContext(ServletContext servletContext) {
         servletContext.setInitParameter("com.sun.faces.forceLoadConfiguration", Boolean.TRUE.toString());
-        servletContext.setInitParameter("primefaces.THEME", "omega");
+        servletContext.setInitParameter("primefaces.THEME", "bootstrap");
         servletContext.setInitParameter("javax.faces.PROJECT_STAGE", "Development");
         servletContext.setInitParameter("javax.faces.FACELETS_REFRESH_PERIOD", "0");
     }

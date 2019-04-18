@@ -27,6 +27,7 @@ body {
     -webkit-box-pack: center;
     justify-content: center;
     color: #fff;
+    min-width: 520px;
 }
 
 /*

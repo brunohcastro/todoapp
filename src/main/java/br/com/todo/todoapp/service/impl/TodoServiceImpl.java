@@ -22,11 +22,6 @@ public class TodoServiceImpl implements TodoService {
     }
 
     @Override
-    public Optional<Todo> find(Integer id) {
-        return this.repository.findById(id);
-    }
-
-    @Override
     public List<Todo> findAll() {
         return this.repository.findAll();
     }
@@ -62,12 +57,47 @@ public class TodoServiceImpl implements TodoService {
     }
 
     @Override
-    public void markAllAsCompleted() {
-        this.repository.markAllAsCompleted();
+    public void updateDescription(Integer id, String description) {
+        this.repository.updateDescription(id, description);
     }
 
     @Override
-    public void markAllAsPending() {
+    public void toggleStatus(Integer id) {
+        Optional<Todo> optionalTodo = this.repository.findById(id);
+
+        if (!optionalTodo.isPresent()) {
+            throw new RuntimeException("Entidade não encontrada");
+        }
+
+        Todo todo = optionalTodo.get();
+
+        todo.toggleStatus();
+
+        this.save(todo);
+    }
+
+    @Override
+    public void toggleAllStatus() {
+        long count = this.count();
+
+        if (count == 0) {
+            return;
+        }
+
+        long completedCount = this.countCompleted();
+
+        if (completedCount == count) {
+            markAllAsPending();
+        } else {
+            markAllAsCompleted();
+        }
+    }
+
+    private void markAllAsCompleted() {
+        this.repository.markAllAsCompleted();
+    }
+
+    private void markAllAsPending() {
         this.repository.markAllAsPending();
     }
 

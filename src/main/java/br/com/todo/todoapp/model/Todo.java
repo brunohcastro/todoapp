@@ -1,7 +1,9 @@
 package br.com.todo.todoapp.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -15,6 +17,7 @@ public class Todo implements Serializable {
     private Integer id;
 
     @NotEmpty
+    @Size(min = 1, max = 150)
     @Column(name = "description", nullable = false, length = 150)
     private String description;
 
@@ -43,6 +46,10 @@ public class Todo implements Serializable {
 
     public void setCompleted(Boolean completed) {
         this.completed = completed;
+    }
+
+    public void toggleStatus() {
+        this.completed = !this.completed;
     }
 
     @Override
