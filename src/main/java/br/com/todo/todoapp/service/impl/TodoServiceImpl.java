@@ -87,18 +87,10 @@ public class TodoServiceImpl implements TodoService {
         long completedCount = this.countCompleted();
 
         if (completedCount == count) {
-            markAllAsPending();
+            this.repository.markAllAsPending();
         } else {
-            markAllAsCompleted();
+            this.repository.markAllAsCompleted();
         }
-    }
-
-    private void markAllAsCompleted() {
-        this.repository.markAllAsCompleted();
-    }
-
-    private void markAllAsPending() {
-        this.repository.markAllAsPending();
     }
 
     @Override
