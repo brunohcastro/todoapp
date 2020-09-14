@@ -350,7 +350,6 @@
             function clearAndRebind() {
                 clearTodo();
 
-                // monkey patch for when the form reloads and the binding is lost;
                 setTimeout(bindResetInput, 100);
                 return false;
             }
