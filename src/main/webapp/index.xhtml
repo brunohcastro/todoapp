@@ -341,26 +341,8 @@
             input.bind('keydown', 'esc', cancelEditListener);
         }
 
-        /**
-         * Binds the main input hotkey for reseting the form
-         */
-        function bindResetInput() {
-            var input = $('#todoForm\\:todoInput');
-
-            function clearAndRebind() {
-                clearTodo();
-
-                setTimeout(bindResetInput, 100);
-                return false;
-            }
-
-            input.unbind('keydown', clearAndRebind);
-            input.bind('keydown', 'esc', clearAndRebind);
-        }
-
         $(document).ready(function () {
             $('.dropdown-toggle').dropdown();
-            bindResetInput();
         });
 
 
